@@ -4,6 +4,8 @@ package coop.tecso.examen.service.impl;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +17,6 @@ import exceptions.AcountNotFound;
 import exceptions.IlegalAccountDelete;
 import exceptions.InsufficientAccountParams;
 import exceptions.InsufficientFunds;
-import exceptions.InsufficientMovementParams;
 
 @Service
 public class AcountServiceImpl implements AcountService {
@@ -33,23 +34,20 @@ public AcountServiceImpl() {
 }
 @Override
 public void addMovement(Long id,String type, String description, Double saldo) {
-	if (acountRepository.getOne(id) == null) {
+	Acount account = acountRepository.findByAcountNro(id);
+	if (account == null) {
 		throw new AcountNotFound("The account with id "+id+" doesnt exists");
 	}
-	Acount acount = acountRepository.getOne(id);
 	Movement movement = new Movement();
 	movement.setAmount(saldo);
 	movement.setDescription(description);
 	movement.setType(type);
 	System.out.println(description);
-	if(saldo == null || description==null||type==null) {
-		throw new InsufficientMovementParams("you must incert the type the description and saldo");
-	}
-	if (type.equals("credit") && !(monedas.get(acount.getCurrency().getCurrency()).hasMoney(acount, movement))) {
+	if (type.equals("credit") && !(monedas.get(account.getCurrency().getCurrency()).hasMoney(account, movement))) {
 		throw new InsufficientFunds("The acount has no funds to make this credit movement");
 	}
-	acount.setMovement(movement);
-	acountRepository.save(acount);
+	account.setMovement(movement);
+	acountRepository.save(account);
 	}
 @Override
 public void createAcount(Double saldo , String currency) {
@@ -70,11 +68,12 @@ public List<Acount> getAcounts() {
 }
 
 @Override
+@Transactional
 public void deleteAcount(Long id) {
 	// TODO Auto-generated method stub
-	Acount acount = acountRepository.getOne(id);
+	Acount acount = acountRepository.findByAcountNro(id);
 	if(acount.getMovements().isEmpty()) {
-		acountRepository.deleteById(id);
+		acountRepository.deleteByAcountNro(id);
 	} else {
 		throw new IlegalAccountDelete("You are not able to delete an acount with movements.");
 	}
@@ -82,9 +81,10 @@ public void deleteAcount(Long id) {
 @Override
 public List<Movement> getAcountMoves(Long id) {
 	// TODO Auto-generated method stub
-	if (acountRepository.getOne(id) == null) {
+	Acount account =acountRepository.findByAcountNro(id);
+	if (account == null) {
 		throw new AcountNotFound("The account with id "+id+" doesnt exists");
 	}
-	return acountRepository.getOne(id).getMovements();
+	return account.getMovements();
 }
 }

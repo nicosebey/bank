@@ -2,8 +2,14 @@ package coop.tecso.examen.dto;
 
 import java.util.Date;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 public class MovementDto {
+	@NotNull
 	private String type;
+	@NotNull
+	@Size(max=200)
 	private String description;
 	//private Moneda moneda;
 	private Double amount;

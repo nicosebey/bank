@@ -4,15 +4,20 @@ package coop.tecso.examen.dto;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+
+
+
 public class AcountDto {
 
 	private long id;
+	@NotNull
+	private long acountNro;
 	private Double saldo;
 	private List<MovementDto> movements = new ArrayList<MovementDto>();
+	@NotNull
 	private CurrencyDto currency = new CurrencyDto();
 	public AcountDto() {
-		// TODO Auto-generated constructor stub
-		
 	}
 
 	public long getId() {
@@ -21,6 +26,13 @@ public class AcountDto {
 
 	public void setId(long id) {
 		this.id = id;
+	}
+	
+	public long getAcountNro() {
+		return this.acountNro;
+	}
+	public void setAcountNro(long nro) {
+		this.acountNro = nro;
 	}
 
 	public Double getSaldo() {

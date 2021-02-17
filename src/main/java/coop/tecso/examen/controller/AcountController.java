@@ -3,6 +3,7 @@ package coop.tecso.examen.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,16 +28,15 @@ public class AcountController {
 	@Autowired
 	public AcountService acountService;
 	
-	
 @PostMapping("/")	
-public void createAcount(@RequestBody AcountDto acount) {
+public void createAcount(@RequestBody @Valid AcountDto acount) {
 	 acountService.createAcount(acount.getSaldo(), acount.getCurrency().getCurrency());	
 }
 
 
 
 @PostMapping("/{id}/movement")
-public void addMovement(@PathVariable("id") Long id, @RequestBody MovementDto movement ) {
+public void addMovement(@PathVariable("id") Long id,  @RequestBody @Valid MovementDto movement ) {
 	
 	acountService.addMovement(id,movement.getType(),movement.getDescription(), movement.getSaldo());
 }
@@ -49,6 +49,7 @@ public List<AcountDto> getAcounts(){
 	for (Acount entity :acounts ) {
 		AcountDto dto = new AcountDto();
 		dto.setSaldo(entity.getSaldo());
+		dto.setAcountNro(entity.getAcountNro());
 		dto.setId(entity.getId());
 		CurrencyDto currencyDto= new CurrencyDto();
 		currencyDto.setCurrency(entity.getCurrency().getCurrency());

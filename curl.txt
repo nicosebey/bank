@@ -1,0 +1,21 @@
+
+//obtener todas las cuentas
+curl --location --request GET 'http://localhost:8080/api/acount/'
+
+//agregar cuenta
+curl --location --request POST 'http://localhost:8080/api/acount/'
+
+
+//eliminar cuenta
+curl --location --request DELETE 'http://localhost:8080/api/acount/{accountNro}'
+
+//agregar movimiento 
+
+curl --location --request POST 'http://localhost:8080/api/acount/{accountNro}/movement'
+
+//obtener los movimientos de una cuenta
+curl --location --request GET 'http://localhost:8080/api/acount/{accountNro}/movements'
+
+
+
+todo esta deployado en : https://mighty-wave-64780.herokuapp.com
